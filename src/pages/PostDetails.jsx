@@ -28,7 +28,6 @@ const PostDetails = ({ data }) => {
                 <img className="detail-avatar" src={post.avatar} alt={post.name} />
                 <div className="post-description">
                     <p>This is {post.name}, who has the amazing power of {post.superpower}!</p>
-                    {/* Add more details here as needed */}
                 </div>
             </div>
             <div className="post-actions">

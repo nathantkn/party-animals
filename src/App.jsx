@@ -11,24 +11,24 @@ import NemoAvatar from './assets/NemoAvatar.webp'
 import Gallery from './pages/Gallery';
 
 const App = () => {
-  const posts = [
-      {'id':'1', 
-      'name': 'Ethan',
-      'superpower':'Invisibility', 
-      'avatar': NemoAvatar},
-      {'id':'2', 
-      'name': 'Nate',
-      'superpower':'Super Strength', 
-      'avatar':NemoAvatar},
-      {'id':'3', 
-      'name': 'Chris',
-      'superpower':'Super Speed', 
-      'avatar':NemoAvatar},
-      {'id':'4', 
-      'name': 'Sam',
-      'superpower':'Flying', 
-      'avatar':NemoAvatar},
-  ]
+  // const posts = [
+  //     {'id':'1', 
+  //     'name': 'Ethan',
+  //     'superpower':'Invisibility', 
+  //     'avatar': NemoAvatar},
+  //     {'id':'2', 
+  //     'name': 'Nate',
+  //     'superpower':'Super Strength', 
+  //     'avatar':NemoAvatar},
+  //     {'id':'3', 
+  //     'name': 'Chris',
+  //     'superpower':'Super Speed', 
+  //     'avatar':NemoAvatar},
+  //     {'id':'4', 
+  //     'name': 'Sam',
+  //     'superpower':'Flying', 
+  //     'avatar':NemoAvatar},
+  // ]
 
   // Homepage component - just the header and buttons, no gallery
   const HomePage = () => (

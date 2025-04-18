@@ -16,8 +16,7 @@ const ReadPosts = (props) => {
             // set state of posts
             setPosts(data)
         }
-        setPosts(props.data);
-        // fetchPosts();
+        fetchPosts();
     }, [props]);
     
     return (
@@ -26,7 +25,7 @@ const ReadPosts = (props) => {
                 posts && posts.length > 0 ?
                 posts.map((post,index) => 
                     <Card id={post.id} name={post.name} superpower={post.superpower} avatar={post.avatar}/>
-                ) : <h2>{'No Challenges Yet 😞'}</h2>
+                ) : <h2>{'No Animals Created Yet 😞'}</h2>
             }
         </div>  
     )
