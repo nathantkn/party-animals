@@ -12,15 +12,17 @@ import OtterAvatar from '../assets/OtterAvatar.webp';
 import TiagraAvatar from '../assets/TiagraAvatar.webp';
 import UnderbiteAvatar from '../assets/UnderbiteAvatar.webp';
 
-const EditPost = ({ data }) => {
+const EditPost = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [animal, setAnimal] = useState({
         id: id,
         name: "",
         superpower: "",
         avatar: "",
-        selectedAvatarName: "" // New field to track selected avatar name
+        selectedAvatarName: "" // Track selected avatar name
     });
 
     const avatarOptions = [
@@ -33,34 +35,52 @@ const EditPost = ({ data }) => {
         { name: "Dinosaur", image: UnderbiteAvatar },
     ];
 
-    // Load data for the specific animal when component mounts
-    useEffect(() => {
-        const loadAnimal = () => {
-            if (data) {
-                const foundAnimal = data.find(item => item.id === id);
-                if (foundAnimal) {
-                    // Find which avatar name corresponds to the current image
-                    const avatarName = getAvatarNameFromImage(foundAnimal.avatar);
-                    
-                    setAnimal({
-                        id: foundAnimal.id,
-                        name: foundAnimal.name,
-                        superpower: foundAnimal.superpower,
-                        avatar: foundAnimal.avatar,
-                        selectedAvatarName: avatarName
-                    });
-                }
-            }
-        };
-
-        loadAnimal();
-    }, [id, data]);
-
     // Helper function to get avatar name from image URL
     const getAvatarNameFromImage = (imageUrl) => {
         const matchingAvatar = avatarOptions.find(avatar => avatar.image === imageUrl);
         return matchingAvatar ? matchingAvatar.name : "";
     };
+
+    // Load data for the specific animal from database when component mounts
+    useEffect(() => {
+        const fetchAnimal = async () => {
+            setLoading(true);
+            
+            try {
+                // Fetch specific animal by id from Supabase
+                const { data, error } = await supabase
+                    .from('Posts')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+
+                if (error) {
+                    console.error("Error fetching animal:", error);
+                    setError("Failed to load animal details");
+                } else if (!data) {
+                    setError("Animal not found");
+                } else {
+                    // Find which avatar name corresponds to the current image
+                    const avatarName = getAvatarNameFromImage(data.avatar);
+                    
+                    setAnimal({
+                        id: data.id,
+                        name: data.name,
+                        superpower: data.superpower,
+                        avatar: data.avatar,
+                        selectedAvatarName: avatarName
+                    });
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+                setError("An unexpected error occurred");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAnimal();
+    }, [id]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -100,29 +120,70 @@ const EditPost = ({ data }) => {
     const updateAnimal = async (event) => {
         event.preventDefault();
 
-        await supabase
-            .from('Posts')
-            .update({
-                name: animal.name,
-                superpower: animal.superpower,
-                avatar: animal.avatar
-            })
-            .eq('id', id);
+        // Validate input fields
+        if (!animal.name || !animal.superpower || !animal.avatar) {
+            alert("Please fill in all fields");
+            return;
+        }
 
-        // Redirect to the animal's detail page
-        navigate(`/post/${id}`);
+        try {
+            const { error } = await supabase
+                .from('Posts')
+                .update({
+                    name: animal.name,
+                    superpower: animal.superpower,
+                    avatar: animal.avatar
+                })
+                .eq('id', id);
+
+            if (error) {
+                alert("Error updating animal: " + error.message);
+            } else {
+                // Redirect to the animal's detail page on success
+                navigate(`/post/${id}`);
+            }
+        } catch (err) {
+            alert("Unexpected error occurred while updating");
+            console.error(err);
+        }
     };
 
     const deleteAnimal = async (event) => {
         event.preventDefault();
 
-        await supabase
-            .from('Posts')
-            .delete()
-            .eq('id', id);
+        if (window.confirm("Are you sure you want to delete this animal?")) {
+            try {
+                const { error } = await supabase
+                    .from('Posts')
+                    .delete()
+                    .eq('id', id);
 
-        navigate('/gallery');
+                if (error) {
+                    alert("Error deleting animal: " + error.message);
+                } else {
+                    navigate('/gallery');
+                }
+            } catch (err) {
+                alert("Unexpected error occurred while deleting");
+                console.error(err);
+            }
+        }
     };
+
+    if (loading) {
+        return <div className="edit-container">Loading animal details...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="edit-container">
+                <div className="error-message">{error}</div>
+                <button className="back-button" onClick={() => navigate('/gallery')}>
+                    Back to Gallery
+                </button>
+            </div>
+        );
+    }
 
     return (
         <div className="edit-container">

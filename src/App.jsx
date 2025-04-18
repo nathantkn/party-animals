@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRoutes } from 'react-router-dom'
 import ReadPosts from './pages/ReadPosts'
 import CreatePost from './pages/CreatePost'
@@ -7,28 +7,28 @@ import EditPost from './pages/EditPost'
 import PostDetails from './pages/PostDetails'
 import { Link } from 'react-router-dom'
 import SideNav from './components/SideNav'
-import NemoAvatar from './assets/NemoAvatar.webp'
 import Gallery from './pages/Gallery';
+import { supabase } from './Client'
 
 const App = () => {
-  // const posts = [
-  //     {'id':'1', 
-  //     'name': 'Ethan',
-  //     'superpower':'Invisibility', 
-  //     'avatar': NemoAvatar},
-  //     {'id':'2', 
-  //     'name': 'Nate',
-  //     'superpower':'Super Strength', 
-  //     'avatar':NemoAvatar},
-  //     {'id':'3', 
-  //     'name': 'Chris',
-  //     'superpower':'Super Speed', 
-  //     'avatar':NemoAvatar},
-  //     {'id':'4', 
-  //     'name': 'Sam',
-  //     'superpower':'Flying', 
-  //     'avatar':NemoAvatar},
-  // ]
+  const [posts, setPosts] = useState([]);
+  
+  // Fetch posts from the database when component mounts
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const { data, error } = await supabase
+        .from('Posts')
+        .select();
+        
+      if (error) {
+        console.error("Error fetching posts:", error);
+      } else {
+        setPosts(data || []);
+      }
+    };
+    
+    fetchPosts();
+  }, []);
 
   // Homepage component - just the header and buttons, no gallery
   const HomePage = () => (

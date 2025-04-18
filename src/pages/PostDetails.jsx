@@ -1,21 +1,61 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import '../styles/PostDetails.css';
+import { supabase } from '../Client';
 
-const PostDetails = ({ data }) => {
+const PostDetails = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
-        // Find the post with the matching id from the data
-        if (data) {
-            const foundPost = data.find(p => p.id === id);
-            setPost(foundPost);
-        }
-    }, [id, data]);
+        const fetchPost = async () => {
+            setLoading(true);
+            
+            try {
+                // Fetch the specific post by id from Supabase
+                const { data, error } = await supabase
+                    .from('Posts')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
 
-    if (!post) {
-        return <div className="post-details">Loading post or post not found...</div>;
+                if (error) {
+                    console.error("Error fetching post:", error);
+                    setError("Failed to load animal details");
+                } else if (!data) {
+                    setError("Animal not found");
+                } else {
+                    setPost(data);
+                }
+            } catch (err) {
+                console.error("Unexpected error:", err);
+                setError("An unexpected error occurred");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchPost();
+    }, [id]);
+
+    if (loading) {
+        return <div className="post-details">Loading animal details...</div>;
+    }
+
+    if (error || !post) {
+        return (
+            <div className="post-details">
+                <div className="error-message">{error || "Animal not found"}</div>
+                <div className="post-actions">
+                    <button className="action-button" onClick={() => navigate('/gallery')}>
+                        Back to Gallery
+                    </button>
+                </div>
+            </div>
+        );
     }
 
     return (
