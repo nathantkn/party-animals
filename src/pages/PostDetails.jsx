@@ -14,24 +14,17 @@ const PostDetails = () => {
         const fetchPost = async () => {
             setLoading(true);
         
-            const { data, error } = await supabase
+            const {data} = await supabase
                 .from('Posts')
                 .select('*')
                 .eq('id', id)
                 .single();
-
-            if (error) {
-                console.log("fetchPost error:", error);
-            } else if (!data) {
-                console.log("fetchPost: No data found");
-            } else {
-                setPost(data);
-            }
-            
+                
+            setPost(data);
             setLoading(false);
         };
 
-        fetchPost();
+        fetchPost().catch(console.error);
     }, [id]);
 
     if (loading) {

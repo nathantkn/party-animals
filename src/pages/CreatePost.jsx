@@ -2,16 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CreatePost.css';
 import { supabase } from '../Client';
-
-// Import avatar images
-import NemoAvatar from '../assets/NemoAvatar.webp';
-import CocoAvatar from '../assets/CocoAvatar.webp';
-import HarryAvatar from '../assets/HarryAvatar.webp';
-import MacchiatoAvatar from '../assets/MacchiatoAvatar.webp';
-import OtterAvatar from '../assets/OtterAvatar.webp';
-import TiagraAvatar from '../assets/TiagraAvatar.webp';
-import UnderbiteAvatar from '../assets/UnderbiteAvatar.webp';
-
+import { avatarOptions } from '../utils/avatars';
 
 const CreatePost = () => {
     const navigate = useNavigate();
@@ -21,16 +12,6 @@ const CreatePost = () => {
         avatar: "",
         selectedAvatarName: ""
     });
-
-    const avatarOptions = [
-        { name: "Dog", image: NemoAvatar },
-        { name: "Crocodile", image: CocoAvatar },
-        { name: "Duck", image: HarryAvatar },
-        { name: "Cat", image: MacchiatoAvatar },
-        { name: "Otter", image: OtterAvatar },
-        { name: "Tiger", image: TiagraAvatar },
-        { name: "Dinosaur", image: UnderbiteAvatar },
-    ];
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -77,7 +58,7 @@ const CreatePost = () => {
         }
 
         // Insert the new animal into the database
-        const { data, error } = await supabase
+        const {} = await supabase
             .from('Posts')
             .insert({
                 name: animal.name,

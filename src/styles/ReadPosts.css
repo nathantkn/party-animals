@@ -18,3 +18,10 @@
     color: white;
     padding: 40px;
 }
+
+.post-details {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    color: white;
+}

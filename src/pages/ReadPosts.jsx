@@ -4,20 +4,26 @@ import '../styles/ReadPosts.css'
 import { supabase } from '../Client'
 
 const ReadPosts = (props) => {
-
+    const [loading, setLoading] = useState(true);
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setLoading(true);
+
             const {data} = await supabase
                 .from('Posts')
                 .select();
 
-            // set state of posts
-            setPosts(data)
+            setPosts(data);
+            setLoading(false);
         }
-        fetchPosts();
+        fetchPosts().catch(console.error);
     }, [props]);
+
+    if (loading) {
+        return <div className="post-details">Loading animal details...</div>;
+    }
     
     return (
         <div className={posts && posts.length > 0 ? "ReadPosts" : "ReadPosts-empty"}>

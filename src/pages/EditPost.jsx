@@ -2,21 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../styles/EditPost.css';
 import { supabase } from '../Client';
-
-// Import avatar images
-import NemoAvatar from '../assets/NemoAvatar.webp';
-import CocoAvatar from '../assets/CocoAvatar.webp';
-import HarryAvatar from '../assets/HarryAvatar.webp';
-import MacchiatoAvatar from '../assets/MacchiatoAvatar.webp';
-import OtterAvatar from '../assets/OtterAvatar.webp';
-import TiagraAvatar from '../assets/TiagraAvatar.webp';
-import UnderbiteAvatar from '../assets/UnderbiteAvatar.webp';
+import { avatarOptions } from '../utils/avatars';
 
 const EditPost = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [animal, setAnimal] = useState({
         id: id,
         name: "",
@@ -24,16 +15,6 @@ const EditPost = () => {
         avatar: "",
         selectedAvatarName: "" // Track selected avatar name
     });
-
-    const avatarOptions = [
-        { name: "Dog", image: NemoAvatar },
-        { name: "Crocodile", image: CocoAvatar },
-        { name: "Duck", image: HarryAvatar },
-        { name: "Cat", image: MacchiatoAvatar },
-        { name: "Otter", image: OtterAvatar },
-        { name: "Tiger", image: TiagraAvatar },
-        { name: "Dinosaur", image: UnderbiteAvatar },
-    ];
 
     // Helper function to get avatar name from image URL
     const getAvatarNameFromImage = (imageUrl) => {
@@ -46,40 +27,28 @@ const EditPost = () => {
         const fetchAnimal = async () => {
             setLoading(true);
             
-            try {
-                // Fetch specific animal by id from Supabase
-                const { data, error } = await supabase
-                    .from('Posts')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+            // Fetch specific animal by id from Supabase
+            const {data} = await supabase
+                .from('Posts')
+                .select('*')
+                .eq('id', id)
+                .single();
 
-                if (error) {
-                    console.error("Error fetching animal:", error);
-                    setError("Failed to load animal details");
-                } else if (!data) {
-                    setError("Animal not found");
-                } else {
-                    // Find which avatar name corresponds to the current image
-                    const avatarName = getAvatarNameFromImage(data.avatar);
-                    
-                    setAnimal({
-                        id: data.id,
-                        name: data.name,
-                        superpower: data.superpower,
-                        avatar: data.avatar,
-                        selectedAvatarName: avatarName
-                    });
-                }
-            } catch (err) {
-                console.error("Unexpected error:", err);
-                setError("An unexpected error occurred");
-            } finally {
-                setLoading(false);
-            }
+            // Find which avatar name corresponds to the current image
+            const avatarName = getAvatarNameFromImage(data.avatar);
+            
+            setAnimal({
+                id: data.id,
+                name: data.name,
+                superpower: data.superpower,
+                avatar: data.avatar,
+                selectedAvatarName: avatarName
+            });
+            
+            setLoading(false);
         };
 
-        fetchAnimal();
+        fetchAnimal().catch(console.error);
     }, [id]);
 
     const handleChange = (event) => {
@@ -126,63 +95,34 @@ const EditPost = () => {
             return;
         }
 
-        try {
-            const { error } = await supabase
-                .from('Posts')
-                .update({
-                    name: animal.name,
-                    superpower: animal.superpower,
-                    avatar: animal.avatar
-                })
-                .eq('id', id);
+        const {} = await supabase
+            .from('Posts')
+            .update({
+                name: animal.name,
+                superpower: animal.superpower,
+                avatar: animal.avatar
+            })
+            .eq('id', id);
 
-            if (error) {
-                alert("Error updating animal: " + error.message);
-            } else {
-                // Redirect to the animal's detail page on success
-                navigate(`/post/${id}`);
-            }
-        } catch (err) {
-            alert("Unexpected error occurred while updating");
-            console.error(err);
-        }
+        // Redirect to the animal's detail page on success
+        navigate(`/post/${id}`);
     };
 
     const deleteAnimal = async (event) => {
         event.preventDefault();
 
         if (window.confirm("Are you sure you want to delete this animal?")) {
-            try {
-                const { error } = await supabase
-                    .from('Posts')
-                    .delete()
-                    .eq('id', id);
+            const {} = await supabase
+                .from('Posts')
+                .delete()
+                .eq('id', id);
 
-                if (error) {
-                    alert("Error deleting animal: " + error.message);
-                } else {
-                    navigate('/gallery');
-                }
-            } catch (err) {
-                alert("Unexpected error occurred while deleting");
-                console.error(err);
-            }
+            navigate('/gallery');
         }
     };
 
     if (loading) {
         return <div className="edit-container">Loading animal details...</div>;
-    }
-
-    if (error) {
-        return (
-            <div className="edit-container">
-                <div className="error-message">{error}</div>
-                <button className="back-button" onClick={() => navigate('/gallery')}>
-                    Back to Gallery
-                </button>
-            </div>
-        );
     }
 
     return (

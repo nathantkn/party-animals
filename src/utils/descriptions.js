@@ -1,18 +1,22 @@
 export const getAvatarDescription = (avatarName) => {
     const descriptions = {
-        "Dog": "A Royal Corgi who gets along well with cats",
+        "Dog": "A Royal Corgi who gets along well with cats.",
         
-        "Crocodile": "Ancient and patient, this mighty reptile has jaws that can crush steel. With armored skin and incredible swimming abilities, it rules both water and land.",
+        "Crocodile": "Green and yellow, yellow and green.",
         
-        "Duck": "Don't be fooled by its innocent appearance! This duck has mastered water, land, and air travel. Its quack can create sonic booms that ripple through water.",
+        "Duck": "All ducks look like this.",
         
-        "Cat": "Mysterious and agile, this feline can see in complete darkness and slip through the smallest spaces. Its purr has healing properties that can mend broken objects.",
+        "Cat": "An orange cat with a red collar.",
         
-        "Otter": "The playful engineer of the animal kingdom, this otter can build incredible underwater structures. It can hold its breath for hours and communicate with all aquatic creatures.",
+        "Otter": "The otter doesn't know what’s next, for he simply lives in the present.",
         
-        "Tiger": "Majestic and powerful, this tiger moves with silent grace. Its stripes can hypnotize opponents, and its roar can be heard across mountains.",
+        "Tiger": "In me the tiger sniffs the rose.",
         
-        "Dinosaur": "A creature from another time, this dinosaur combines ancient strength with modern intelligence. Its scales can change color to blend with any environment."
+        "Dinosaur": "A green dinosaur with a beige body and sleepy eyes.",
+
+        "Moose": "What you lookin' at? i ain't pullin' no sleigh.",
+
+        "Gorilla": "He has a tender heart and muscles of steel.",
     };
     
     return descriptions[avatarName] || "A mysterious creature with extraordinary abilities and unknown origins.";
@@ -27,7 +31,9 @@ export const getAvatarNameMapping = () => {
         "Cat": "MacchiatoAvatar",
         "Otter": "OtterAvatar",
         "Tiger": "TiagraAvatar",
-        "Dinosaur": "UnderbiteAvatar"
+        "Dinosaur": "UnderbiteAvatar",
+        "Moose": "MorseAvatar",
+        "Gorilla": "BarbieAvatar",
     };
 };
 
