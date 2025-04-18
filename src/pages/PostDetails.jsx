@@ -2,40 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import '../styles/PostDetails.css';
 import { supabase } from '../Client';
+import { getAvatarNameFromUrl, getAvatarDescription } from '../utils/descriptions';
 
 const PostDetails = () => {
     const { id } = useParams();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPost = async () => {
             setLoading(true);
-            
-            try {
-                // Fetch the specific post by id from Supabase
-                const { data, error } = await supabase
-                    .from('Posts')
-                    .select('*')
-                    .eq('id', id)
-                    .single();
+        
+            const { data, error } = await supabase
+                .from('Posts')
+                .select('*')
+                .eq('id', id)
+                .single();
 
-                if (error) {
-                    console.error("Error fetching post:", error);
-                    setError("Failed to load animal details");
-                } else if (!data) {
-                    setError("Animal not found");
-                } else {
-                    setPost(data);
-                }
-            } catch (err) {
-                console.error("Unexpected error:", err);
-                setError("An unexpected error occurred");
-            } finally {
-                setLoading(false);
+            if (error) {
+                console.log("fetchPost error:", error);
+            } else if (!data) {
+                console.log("fetchPost: No data found");
+            } else {
+                setPost(data);
             }
+            
+            setLoading(false);
         };
 
         fetchPost();
@@ -45,10 +38,9 @@ const PostDetails = () => {
         return <div className="post-details">Loading animal details...</div>;
     }
 
-    if (error || !post) {
+    if (!post) {
         return (
             <div className="post-details">
-                <div className="error-message">{error || "Animal not found"}</div>
                 <div className="post-actions">
                     <button className="action-button" onClick={() => navigate('/gallery')}>
                         Back to Gallery
@@ -57,6 +49,9 @@ const PostDetails = () => {
             </div>
         );
     }
+
+    const avatarName = getAvatarNameFromUrl(post.avatar);
+    const avatarDescription = getAvatarDescription(avatarName);
 
     return (
         <div className="post-details">
@@ -67,7 +62,9 @@ const PostDetails = () => {
             <div className="post-content">
                 <img className="detail-avatar" src={post.avatar} alt={post.name} />
                 <div className="post-description">
-                    <p>This is {post.name}, who has the amazing power of {post.superpower}!</p>
+                    <div className="avatar-description">
+                        <p>{avatarDescription}</p>
+                    </div>
                 </div>
             </div>
             <div className="post-actions">

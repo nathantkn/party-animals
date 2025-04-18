@@ -142,7 +142,7 @@ const CreatePost = () => {
                 )}
 
                 <div className="button-group">
-                    <button type="button" className="back-button" onClick={() => navigate('/')}>
+                    <button type="button" className="back-button" onClick={() => navigate('/gallery')}>
                         Cancel
                     </button>
                     <button type="submit" className="create-button" onClick={createAnimal}>

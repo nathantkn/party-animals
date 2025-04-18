@@ -6,9 +6,7 @@ import '../styles/SideNav.css';
 const SideNav = () => {
     return (
         <div className="sideNav">
-            <div className="logo">
-                <img src={logo} alt="Logo" />
-            </div>
+            <img src={logo} className="logo"/>
             <div className='menu'>
                 <ul>
                     <li className="menu-item" key="home-button">

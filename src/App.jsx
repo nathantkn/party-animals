@@ -1,14 +1,14 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
-import { useRoutes } from 'react-router-dom'
-import ReadPosts from './pages/ReadPosts'
+import { useRoutes, Link } from 'react-router-dom'
+import { supabase } from './Client'
+
+import PartyAnimals from './assets/PartyAnimals.webp'
+import SideNav from './components/SideNav'
 import CreatePost from './pages/CreatePost'
 import EditPost from './pages/EditPost'
 import PostDetails from './pages/PostDetails'
-import { Link } from 'react-router-dom'
-import SideNav from './components/SideNav'
 import Gallery from './pages/Gallery';
-import { supabase } from './Client'
 
 const App = () => {
   const [posts, setPosts] = useState([]);
@@ -30,12 +30,18 @@ const App = () => {
     fetchPosts();
   }, []);
 
-  // Homepage component - just the header and buttons, no gallery
   const HomePage = () => (
-    <div className="header">
-      <h1>Welcome to Party Animals!</h1>
-      <Link to="/gallery"><button className="headerBtn"> Explore Animals 🔍 </button></Link>
-      <Link to="/new"><button className="headerBtn"> Create Your Animal 🏆 </button></Link>
+    <div>
+      <div className="header">
+        <h1>Welcome to Party Animals!</h1>
+      </div>
+      <img src={PartyAnimals} className="hero-image" />
+      <div className="app-description">
+        <h2>Discover Extraordinary Animals with Superpowers</h2>
+        <p>Party Animals is a fun place to explore and create your own collection of amazing animals, each with their unique superpowers!</p>
+        <p>Visit our Gallery to see all the incredible animals, or create your own powerful companion.</p>
+        <Link to="/gallery"><button className="gallery-button">Explore the Gallery</button></Link>
+      </div>
     </div>
   );
 
@@ -66,7 +72,9 @@ const App = () => {
   return ( 
     <div className="App">
       <SideNav />
-      {element}
+      <div className="content-container">
+        {element}
+      </div>
     </div>
   );
 }
