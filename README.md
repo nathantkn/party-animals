@@ -2,7 +2,7 @@
 
 Submitted by: **Nathan Trinh**
 
-This web app: **insert description**
+This web app: **lets users create, view, edit, and delete animal characters with custom names and superpowers. Each animal character has a unique avatar and detail page.**
 
 Time spent: **8** hours spent in total
 
@@ -44,4 +44,4 @@ The following **optional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://imgur.com/a/SLsACMn.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://imgur.com/a/4JjaDNx.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
